@@ -1,42 +1,41 @@
 <template>
-  <div></div>
+  <div>
+    <button @click="fetchData">Cargar Datos</button>
+    <div v-if="getBtcData">
+      <h2>Datos BTC</h2>
+      <pre>{{ getBtcData }}</pre>
+    </div>
+    <div v-if="getEthData">
+      <h2>Datos ETH</h2>
+      <pre>{{ getEthData }}</pre>
+    </div>
+    <div v-if="getUsdtData">
+      <h2>Datos USDT</h2>
+      <pre>{{ getUsdtData }}</pre>
+    </div>
+    <div v-if="errorAccederApi">
+      <p>{{ errorAccederApi }}</p>
+    </div>
+  </div>
 </template>
 
 <script>
-import { ref } from "vue";
-import apiService from "@/services/EventService.js";
+import { mapGetters } from "vuex";
 
 export default {
-  setup() {
-    const coins = ["BTC", "ETH", "USDT"];
-    const mostrarDatos = ref(null);
-    const cotizaciones = ref({});
-
-    const detalles = async (cripto) => {
-      if (mostrarDatos.value === cripto) {
-        mostrarDatos.value = null;
-      } else {
-        mostrarDatos.value = cripto;
-        await llamadaCotizaciones(coins.value[cripto]);
-      }
-    };
-    const llamadaCotizaciones = async (coin) => {
-      try {
-        const response = await apiService.monedas(coin, "ars");
-        cotizaciones.value[coin] = response.data.result[coin];
-      } catch (error) {
-        console.error("Fallo la llamada a las cotizaciones", error);
-      }
-    };
-    return {
-      coins,
-      mostrarDatos,
-      cotizaciones,
-      detalles,
-    };
+  computed: {
+    ...mapGetters([
+      "getBtcData",
+      "getEthData",
+      "getUsdtData",
+      "errorAccederApi",
+    ]),
+  },
+  methods: {
+    fetchData() {
+      this.$store.dispatch("consultaApi");
+    },
   },
 };
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped></style>
