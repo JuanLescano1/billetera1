@@ -1,20 +1,26 @@
 <template>
   <div>
-    <button @click="fetchData">Cargar Datos</button>
-    <div v-if="getBtcData">
+    <button @click="mostrarBTC">Mostrar BTC</button>
+    <button @click="mostrarETH">Mostrar ETH</button>
+    <button @click="mostrarUSDT">Mostrar USDT</button>
+
+    <div v-if="monedaSeleccionada === 'btc' && getBtcData">
       <h2>Datos BTC</h2>
-      <pre>{{ getBtcData }}</pre>
+      <p v-for="(exchange, name) in getBtcData" :key="name">
+        {{ name }}: Ask - {{ exchange.ask }}
+      </p>
     </div>
-    <div v-if="getEthData">
+    <div v-if="monedaSeleccionada === 'eth' && getEthData">
       <h2>Datos ETH</h2>
-      <pre>{{ getEthData }}</pre>
+      <p v-for="(exchange, name) in getEthData" :key="name">
+        {{ name }}: Ask - {{ exchange.ask }}
+      </p>
     </div>
-    <div v-if="getUsdtData">
+    <div v-if="monedaSeleccionada === 'usdt' && getUsdtData">
       <h2>Datos USDT</h2>
-      <pre>{{ getUsdtData }}</pre>
-    </div>
-    <div v-if="errorAccederApi">
-      <p>{{ errorAccederApi }}</p>
+      <p v-for="(exchange, name) in getUsdtData" :key="name">
+        {{ name }}: Ask - {{ exchange.ask }}
+      </p>
     </div>
   </div>
 </template>
@@ -23,6 +29,11 @@
 import { mapGetters } from "vuex";
 
 export default {
+  data() {
+    return {
+      monedaSeleccionada: "btc",
+    };
+  },
   computed: {
     ...mapGetters([
       "getBtcData",
@@ -32,9 +43,21 @@ export default {
     ]),
   },
   methods: {
-    fetchData() {
+    cargaDatos() {
       this.$store.dispatch("consultaApi");
     },
+    mostrarBTC() {
+      this.monedaSeleccionada = "btc";
+    },
+    mostrarETH() {
+      this.monedaSeleccionada = "eth";
+    },
+    mostrarUSDT() {
+      this.monedaSeleccionada = "usdt";
+    },
+  },
+  mounted() {
+    this.cargaDatos();
   },
 };
 </script>
