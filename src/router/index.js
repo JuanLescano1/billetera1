@@ -16,6 +16,11 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
+  {
+    path: "/Compra/:moneda-:exchange",
+    name: "compra",
+    component: () => import("../views/VistaCompras.vue"),
+  },
 ];
 
 const router = createRouter({
