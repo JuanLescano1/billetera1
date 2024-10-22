@@ -31,6 +31,9 @@ export default createStore({
     actUsdtData(state, data) {
       state.usdtData = data;
     },
+    actError(state) {
+      state.error = true;
+    },
   },
   actions: {
     consultaApi({ commit }) {
