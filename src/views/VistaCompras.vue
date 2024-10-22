@@ -8,12 +8,14 @@
       <p>Precio de venta: {{ monedaData.bid }}</p>
       <p>Precio de venta con comisiones: {{ monedaData.totalBid }}</p>
       <p>Tiempo de ultima actualizacion: {{ monedaData.time }}</p>
+      <input placeholder="Cantidad a comprar" /><button>Comprar</button>
+      <button @click="cancelarCompra">Cancelar</button>
     </div>
     <div v-else-if="!validarMoneda">
-      <p>No hay datos de esta moneda</p>
+      <p>No hay datos de esta moneda {{ moneda }}</p>
     </div>
     <div v-else>
-      <p>No hay datos para este exchange</p>
+      <p>No hay datos para este exchange {{ exchange }}</p>
     </div>
   </div>
 </template>
@@ -51,6 +53,11 @@ export default {
         return null;
       }
       return guardarData[this.exchange];
+    },
+  },
+  methods: {
+    cancelarCompra() {
+      this.$router.push("/");
     },
   },
 };
