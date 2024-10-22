@@ -3,34 +3,36 @@
     <button @click="mostrarBTC">Mostrar BTC</button>
     <button @click="mostrarETH">Mostrar ETH</button>
     <button @click="mostrarUSDT">Mostrar USDT</button>
-
-    <div v-if="monedaSeleccionada === 'btc' && getBtcData">
-      <h2>Datos BTC</h2>
-      <p v-for="(exchange, name) in getBtcData" :key="name">
-        Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio de
-        compra con comisiones:
-        {{ exchange.totalAsk }}
-        <button @click="compraCripto('btc', name)">Compra</button>
-      </p>
+    <div v-if="!errorAccederApi">
+      <div v-if="monedaSeleccionada === 'btc' && getBtcData">
+        <h2>Datos BTC</h2>
+        <p v-for="(exchange, name) in getBtcData" :key="name">
+          Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio
+          de compra con comisiones:
+          {{ exchange.totalAsk }}
+          <button @click="compraCripto('btc', name)">Compra</button>
+        </p>
+      </div>
+      <div v-if="monedaSeleccionada === 'eth' && getEthData">
+        <h2>Datos ETH</h2>
+        <p v-for="(exchange, name) in getEthData" :key="name">
+          Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio
+          de compra con comisiones:
+          {{ exchange.totalAsk }}
+          <button @click="compraCripto('eth', name)">Compra</button>
+        </p>
+      </div>
+      <div v-if="monedaSeleccionada === 'usdt' && getUsdtData">
+        <h2>Datos USDT</h2>
+        <p v-for="(exchange, name) in getUsdtData" :key="name">
+          Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio
+          de compra con comisiones:
+          {{ exchange.totalAsk }}
+          <button @click="compraCripto('usdt', name)">Compra</button>
+        </p>
+      </div>
     </div>
-    <div v-if="monedaSeleccionada === 'eth' && getEthData">
-      <h2>Datos ETH</h2>
-      <p v-for="(exchange, name) in getEthData" :key="name">
-        Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio de
-        compra con comisiones:
-        {{ exchange.totalAsk }}
-        <button @click="compraCripto('eth', name)">Compra</button>
-      </p>
-    </div>
-    <div v-if="monedaSeleccionada === 'usdt' && getUsdtData">
-      <h2>Datos USDT</h2>
-      <p v-for="(exchange, name) in getUsdtData" :key="name">
-        Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio de
-        compra con comisiones:
-        {{ exchange.totalAsk }}
-        <button @click="compraCripto('usdt', name)">Compra</button>
-      </p>
-    </div>
+    <h1 v-else>No se puedo Cargar los datos de la api</h1>
   </div>
 </template>
 
