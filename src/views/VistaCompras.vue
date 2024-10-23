@@ -8,7 +8,14 @@
       <p>Precio de venta: {{ monedaData.bid }}</p>
       <p>Precio de venta con comisiones: {{ monedaData.totalBid }}</p>
       <p>Tiempo de ultima actualizacion: {{ monedaData.time }}</p>
-      <input placeholder="Cantidad a comprar" /><button>Comprar</button>
+      <input
+        :placeholder="`Cantidad a comprar: ${cantidadMin}`"
+        v-model="cantidad"
+        :step="cantidadMin"
+        :min="cantidadMin"
+        type="number"
+      />
+      <button @click="confirmar">Comprar</button>
       <button @click="cancelarCompra">Cancelar</button>
     </div>
     <div v-else-if="!validarMoneda">
@@ -22,7 +29,20 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
+  data() {
+    return {
+      cantidad: null,
+    };
+  },
   computed: {
+    cantidadMin() {
+      if (this.monedaData) {
+        const gastoMin = 0.01;
+        const precioUnidad = this.monedaData.totalAsk;
+        return gastoMin / precioUnidad;
+      }
+      return 0;
+    },
     moneda() {
       return this.$route.params.moneda;
     },
@@ -58,6 +78,11 @@ export default {
   methods: {
     cancelarCompra() {
       this.$router.push("/");
+    },
+    confirmar() {
+      console.log("Cantidad a comprar: ", this.cantidad);
+      console.log("Cantidad minima posible: ", this.monedaData[this.moneda]);
+      console.log("Precio unidad: ", this.monedaData.totalAsk);
     },
   },
 };
