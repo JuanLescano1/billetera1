@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import eventService from "@/services/EventService.js";
+import moment from "moment";
 export default createStore({
   state: {
     btcData: null,
@@ -36,6 +37,13 @@ export default createStore({
     },
   },
   actions: {
+    async darFormatoFecha(_, tiempo) {
+      const nuevaFecha = await moment
+        .unix(tiempo)
+        .local()
+        .format("YYYY-MM-DDTHH:mm:ss.SSS-03:00");
+      return nuevaFecha;
+    },
     consultaApi({ commit }) {
       const actApi = async () => {
         try {

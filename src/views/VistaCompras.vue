@@ -80,9 +80,9 @@ export default {
       this.$router.push("/");
     },
     confirmar() {
-      console.log("Cantidad a comprar: ", this.cantidad);
-      console.log("Cantidad minima posible: ", this.monedaData[this.moneda]);
-      console.log("Precio unidad: ", this.monedaData.totalAsk);
+      if (this.cantidad > 0) {
+        console.log();
+      }
     },
   },
 };
