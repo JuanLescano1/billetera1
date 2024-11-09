@@ -27,6 +27,7 @@
   </div>
 </template>
 <script>
+import EventService from "@/services/EventService";
 import { mapGetters } from "vuex";
 export default {
   data() {
@@ -81,8 +82,33 @@ export default {
     },
     confirmar() {
       if (this.cantidad > 0) {
-        console.log();
+        console.log("Cantidad comprada:", this.cantidad);
+        const fecha = this.monedaData.time;
+        console.log("Fecha:", fecha);
+        const infoCompra = {
+          crypto_code: this.moneda,
+          crypto_amount: this.cantidad,
+          money: this.gastado(),
+          user_id: "5", //user_id: va el usuario iniciado,
+          action: "purchase",
+          datetime: fecha,
+        };
+        console.log(infoCompra);
+        EventService.compra(infoCompra)
+          .then((response) => {
+            console.log("Respuesta de la api: ", response.data);
+            console.log("Cantidad a comprar: ", this.cantidad);
+            console.log("precio a comprar:", this.cantComprada());
+          })
+          .catch((error) => {
+            console.error("Error de la api: ", error);
+          });
       }
+    },
+    gastado() {
+      const precioUnidad = this.monedaData.totalAsk.toFixed(8);
+      const precioAPagar = precioUnidad * this.cantidad.toFixed(8);
+      return parseFloat(precioAPagar.toFixed(8));
     },
   },
 };
