@@ -11,8 +11,8 @@
       <input
         :placeholder="`Cantidad minima a comprar: ${cantidadMin}`"
         v-model="cantidad"
-        :step="cantidadMin"
-        :min="cantidadMin"
+        :step="0.00000001"
+        :min="cantidadMin.toFixed(8)"
         type="number"
       />
       <button @click="confirmar">Comprar</button>
