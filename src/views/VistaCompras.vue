@@ -9,7 +9,7 @@
       <p>Precio de venta con comisiones: {{ monedaData.totalBid }}</p>
       <p>Tiempo de ultima actualizacion: {{ monedaData.time }}</p>
       <input
-        :placeholder="`Cantidad a comprar: ${cantidadMin}`"
+        :placeholder="`Cantidad minima a comprar: ${cantidadMin}`"
         v-model="cantidad"
         :step="cantidadMin"
         :min="cantidadMin"
@@ -81,34 +81,40 @@ export default {
       this.$router.push("/");
     },
     confirmar() {
-      if (this.cantidad > 0) {
-        console.log("Cantidad comprada:", this.cantidad);
+      if (
+        this.cantidad > 0 &&
+        this.cantidad.toFixed(8) >= this.cantidadMin.toFixed(8)
+      ) {
+        console.log("Cantidad comprada:", this.cantidadMin);
         const fecha = this.monedaData.time;
         console.log("Fecha:", fecha);
         const infoCompra = {
           crypto_code: this.moneda,
           crypto_amount: this.cantidad,
-          money: this.gastado(),
+          money: this.gastado().toFixed(2),
           user_id: "5", //user_id: va el usuario iniciado,
           action: "purchase",
           datetime: fecha,
         };
-        console.log(infoCompra);
+        console.log("Info de la compra", infoCompra);
         EventService.compra(infoCompra)
           .then((response) => {
             console.log("Respuesta de la api: ", response.data);
             console.log("Cantidad a comprar: ", this.cantidad);
-            console.log("precio a comprar:", this.cantComprada());
+            console.log("precio a comprar:", this.gastado().toFixed(2));
           })
           .catch((error) => {
             console.error("Error de la api: ", error);
           });
+      } else {
+        alert("Ingrese un numero valido a comprar");
       }
     },
     gastado() {
-      const precioUnidad = this.monedaData.totalAsk.toFixed(8);
-      const precioAPagar = precioUnidad * this.cantidad.toFixed(8);
-      return parseFloat(precioAPagar.toFixed(8));
+      const precioUnidad = this.monedaData.totalAsk;
+      const precioAPagar = precioUnidad * this.cantidad;
+      console.log("precio a comprar:", precioAPagar);
+      return parseFloat(precioAPagar);
     },
   },
 };

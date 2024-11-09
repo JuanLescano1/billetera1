@@ -37,17 +37,24 @@ export default createStore({
     },
   },
   actions: {
-    async darFormatoFecha(_, tiempo) {
-      const nuevaFecha = await moment
-        .unix(tiempo)
-        .local()
-        .format("YYYY-MM-DDTHH:mm:ss.SSS-03:00");
-      return nuevaFecha;
-    },
     consultaApi({ commit }) {
       const actApi = async () => {
         try {
+          const darFormatoFecha = (tiempo) => {
+            const nuevaFecha = moment
+              .unix(tiempo)
+              .local()
+              .format("YYYY-MM-DDTHH:mm:ss.SSS-03:00");
+            return nuevaFecha;
+          };
           const responseBTC = await eventService.monedas("BTC", "ars");
+          for (const exchange in responseBTC.data) {
+            if (await responseBTC.data[exchange].time) {
+              responseBTC.data[exchange].time = await darFormatoFecha(
+                responseBTC.data[exchange].time
+              );
+            }
+          }
           commit("actBtcData", responseBTC.data);
           const responseETH = await eventService.monedas("ETH", "ars");
           commit("actEthData", responseETH.data);
