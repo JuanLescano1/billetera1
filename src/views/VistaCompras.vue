@@ -36,6 +36,15 @@ export default {
     };
   },
   computed: {
+    usuario() {
+      const id = localStorage.getItem("idUsuario");
+      return (
+        this.$store.state.usuarios.find((usuario) => usuario.id === id) || {}
+      );
+    },
+    autenticado() {
+      return this.$store.getters.usuarioAutenticado;
+    },
     cantidadMin() {
       if (this.monedaData) {
         const gastoMin = 0.01;
@@ -92,7 +101,7 @@ export default {
           crypto_code: this.moneda,
           crypto_amount: this.cantidad,
           money: this.gastado().toFixed(2),
-          user_id: "5", //user_id: va el usuario iniciado,
+          user_id: this.usuario.id, //user_id: va el usuario iniciado,
           action: "purchase",
           datetime: fecha,
         };
@@ -102,11 +111,14 @@ export default {
             console.log("Respuesta de la api: ", response.data);
             console.log("Cantidad a comprar: ", this.cantidad);
             console.log("precio a comprar:", this.gastado().toFixed(2));
+            console.log("Usuario: ", this.usuario.id);
+            alert("La compra fue existosa");
           })
           .catch((error) => {
             console.error("Error de la api: ", error);
+            alert("La compra no se pudo llevar a cabo");
           });
-        this.$router.push("/");
+        this.$router.push("/crypto");
       } else {
         alert("Ingrese un numero valido a comprar");
       }

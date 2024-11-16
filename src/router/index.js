@@ -17,6 +17,11 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
   },
   {
+    path: "/crypto",
+    name: "crypto",
+    component: () => import("../views/VistaCryptos.vue"),
+  },
+  {
     path: "/Compra/:moneda-:exchange",
     name: "compra",
     component: () => import("../views/VistaCompras.vue"),

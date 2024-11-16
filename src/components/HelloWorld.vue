@@ -1,78 +1,107 @@
 <template>
   <div>
-    <button @click="mostrarBTC">Mostrar BTC</button>
-    <button @click="mostrarETH">Mostrar ETH</button>
-    <button @click="mostrarUSDT">Mostrar USDT</button>
-    <div v-if="!errorAccederApi">
-      <div v-if="monedaSeleccionada === 'btc' && getBtcData">
-        <h2>Datos BTC</h2>
-        <p v-for="(exchange, name) in getBtcData" :key="name">
-          Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio
-          de compra con comisiones:
-          {{ exchange.totalAsk }}
-          <button @click="compraCripto('btc', name)">Compra</button>
-        </p>
+    <img src="@\components\Imagenes\FondoInicioSesion.jpg" id="fondo" />
+    <div id="ingresoDeUsuario">
+      <h2>Ingrese su ID</h2>
+      <div id="imagen">
+        <img src="@\components\Imagenes\Usuario-removebg-preview.png" />
       </div>
-      <div v-if="monedaSeleccionada === 'eth' && getEthData">
-        <h2>Datos ETH</h2>
-        <p v-for="(exchange, name) in getEthData" :key="name">
-          Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio
-          de compra con comisiones:
-          {{ exchange.totalAsk }}
-          <button @click="compraCripto('eth', name)">Compra</button>
-        </p>
-      </div>
-      <div v-if="monedaSeleccionada === 'usdt' && getUsdtData">
-        <h2>Datos USDT</h2>
-        <p v-for="(exchange, name) in getUsdtData" :key="name">
-          Exchange: {{ name }} - Precio de compra: {{ exchange.ask }} - Precio
-          de compra con comisiones:
-          {{ exchange.totalAsk }}
-          <button @click="compraCripto('usdt', name)">Compra</button>
-        </p>
-      </div>
+      <input v-model.trim="idUsuario" id="id" />
+      <button v-on:click="controlDeInicio">Ingresar</button>
     </div>
-    <h1 v-else>No se puedo Cargar los datos de la api</h1>
   </div>
 </template>
-
 <script>
-import { mapGetters } from "vuex";
-
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
-      monedaSeleccionada: "btc",
+      idUsuario: "",
     };
   },
-  computed: {
-    ...mapGetters([
-      "getBtcData",
-      "getEthData",
-      "getUsdtData",
-      "errorAccederApi",
-    ]),
-  },
   methods: {
-    compraCripto(moneda, exchange) {
-      this.$router.push({ name: "compra", params: { moneda, exchange } });
+    ...mapActions(["inicio"]),
+    controlDeInicio() {
+      if (this.idUsuario !== "") {
+        this.inicio(this.idUsuario);
+        this.$router.push("/crypto");
+      } else {
+        alert("Usuario no valido");
+      }
     },
-    cargaDatos() {
-      this.$store.dispatch("consultaApi");
-    },
-    mostrarBTC() {
-      this.monedaSeleccionada = "btc";
-    },
-    mostrarETH() {
-      this.monedaSeleccionada = "eth";
-    },
-    mostrarUSDT() {
-      this.monedaSeleccionada = "usdt";
-    },
-  },
-  mounted() {
-    this.cargaDatos();
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+#fondo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+}
+#ingresoDeUsuario {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  border-style: groove;
+  border-radius: 10px;
+  border-color: black;
+  min-width: 300px;
+  min-height: 300px;
+  align-items: center;
+  justify-content: center;
+  max-width: 300px;
+  background-image: url("/src/components/Imagenes/FondoInicioSesion.jpg");
+  background-size: cover;
+}
+
+#ingresoDeUsuario h2 {
+  position: relative;
+  margin: 0px;
+  -webkit-text-stroke: 1px black;
+  text-shadow: 0px 2px 4px #fc0490;
+}
+#ingresoDeUsuario button {
+  border-radius: 10px;
+  border-color: rgb(44, 23, 102);
+  width: 100px;
+  font-size: 15px;
+}
+#ingresoDeUsuario #id {
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border-style: inset;
+  border-color: rgb(44, 23, 102);
+}
+#imagen img {
+  width: 50%;
+  height: 50%;
+  display: block;
+  margin: auto;
+}
+#imagen {
+  display: flex;
+  margin: 3px;
+  border-radius: 50%;
+  position: relative;
+  max-width: 100px;
+  max-height: 100px;
+  min-width: 100px;
+  min-height: 100px;
+  background: linear-gradient(
+    35deg,
+    #1b0438,
+    #1b0438,
+    #5c3a8e,
+    #db2190,
+    #fc0490
+  );
+  border-style: solid;
+}
+</style>

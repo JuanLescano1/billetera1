@@ -1,11 +1,21 @@
 <template>
   <nav>
-    <router-link to="/">Listado de monedas</router-link> |
+    <router-link to="/" v-if="!usuarioAutenticado">
+      Listado de monedas
+    </router-link>
+    |
     <router-link to="/about">¿Quienes somos?</router-link>
   </nav>
   <router-view />
 </template>
-
+<script>
+import { mapGetters } from "vuex";
+export default {
+  computed: {
+    ...mapGetters(["usuarioAutenticado"]),
+  },
+};
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
