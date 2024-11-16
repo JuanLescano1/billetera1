@@ -80,7 +80,7 @@ export default {
     cancelarCompra() {
       this.$router.push("/");
     },
-    confirmar() {
+    async confirmar() {
       if (
         this.cantidad > 0 &&
         this.cantidad.toFixed(8) >= this.cantidadMin.toFixed(8)
@@ -97,7 +97,7 @@ export default {
           datetime: fecha,
         };
         console.log("Info de la compra", infoCompra);
-        EventService.compra(infoCompra)
+        await EventService.compra(infoCompra)
           .then((response) => {
             console.log("Respuesta de la api: ", response.data);
             console.log("Cantidad a comprar: ", this.cantidad);
@@ -106,6 +106,7 @@ export default {
           .catch((error) => {
             console.error("Error de la api: ", error);
           });
+        this.$router.push("/");
       } else {
         alert("Ingrese un numero valido a comprar");
       }
